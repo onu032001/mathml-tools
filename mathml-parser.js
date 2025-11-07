@@ -82,7 +82,7 @@ function MathMLElementToJS(mmlElem, parent = "") {
     }
   };
   const childNameOuter = mmlElem.nodeName.toLowerCase();
-  if (structElem.includes(childNameOuter) && !structElem.includes(parent) && !textElem.includes(parent) {
+  if (structElem.includes(childNameOuter) && !structElem.includes(parent) && !textElem.includes(parent)) {
     const childNodes = Array.from(mmlElem.childNodes);
     childNodes.forEach(snippetToJS);
   } else {
