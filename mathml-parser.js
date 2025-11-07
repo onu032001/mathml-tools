@@ -1,12 +1,14 @@
 /**
  * Parses MathML Element.
- * @param {Element} mmlElem MathML element parsed using MathML.
- * @returns {string}
+ * @param {MathMLElement} mmlElem MathML element parsed using MathML.
  */
 function MathMLElementToJS(mmlElem) {
   let result = '';
-  const childNodes = Array.from(mmlElem.childNodes);
-  childNodes.forEach((child) => {
+  /**
+   * Snippet to JavaScript.
+   * @param {Node} child Child to iterate.
+   */
+  const snippetToJS = (child) => {
     if (child.nodeType === 3) return;
     const childName = child.nodeName.toLowerCase();
     switch (childName) {
@@ -23,18 +25,19 @@ function MathMLElementToJS(mmlElem) {
         }
         break;
       case 'mi':
-        if (Math[child.textContent]) {
-          result += 'Math.' + child.textContent;
-        } else if (child.textContent === 'π') {
+        if (child.textContent === 'π') {
           result += 'Math.PI';
         } else if (child.textContent === 'e') {
-          reslt += 'Math.E';
+          result += 'Math.E';
+        } else if (Math[child.textContent]) {
+          result += 'Math.' + child.textContent;
         } else {
           result += child.textContent;
         }
         break;
       case 'msup': {
         let childNodesForSup = Array.from(child.childNodes);
+        childNodesForSup.pop();
         const superscriptElem = childNodesForSup.pop();
         const superscript = MathMLElementToJS(superscriptElem);
         const baseElem = childNodesForSup.pop();
@@ -43,7 +46,7 @@ function MathMLElementToJS(mmlElem) {
         break;
       }
       case 'mrow':
-        result += MathMLElementToJS(child);
+        result += `(${MathMLElementToJS(child)})`;
         break;
       case 'msqrt': {
         const sqrtInside = MathMLElementToJS(child);
@@ -52,6 +55,7 @@ function MathMLElementToJS(mmlElem) {
       }
       case 'mroot': {
         let childNodesForRoot = Array.from(child.childNodes);
+        childNodesForRoot.pop();
         const indexElem = childNodesForRoot.pop();
         const index = MathMLElementToJS(indexElem);
         const baseElem = childNodesForRoot.pop();
@@ -61,7 +65,14 @@ function MathMLElementToJS(mmlElem) {
       default:
         break;
     }
-  });
+  };
+  const childNameOuter = mmlElem.nodeName.toLowerCase();
+  if (['math', 'mrow', 'msqrt'].includes(childNameOuter)) {
+    const childNodes = Array.from(mmlElem.childNodes);
+    childNodes.forEach(snippetToJS);
+  } else {
+    snippetToJS(mmlElem);
+  }
   return result;
 }
 function MathMLStringToJS(mml) {
