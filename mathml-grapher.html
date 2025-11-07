@@ -4,10 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Graph Plotter</title>
-    <script src=
-        "https://cdn.plot.ly/plotly-latest.min.js">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js">
     </script>
     <script src="./mathml-parser.js"></script>
+    <!-- Credits to fred-wang -->
+    <link
+      rel="stylesheet"
+      href="https://fred-wang.github.io/MathFonts/LatinModern/mathfonts.css" />
 
     <style>
         body {
@@ -97,7 +100,6 @@
             <h1>MathML Graph Plotter</h1>
             <div class="input-container">
                 <textarea id="mmlInput" style="width: 100%;"></textarea>
-                <button onclick="copyMml()">Copy MathML</button>
                 <button onclick="convertMml()">Convert to MathML</button><br>
                 <div contenteditable="true" id="functionInput" style="width: 100%;"></div><br>
                 <button onclick="rewrite()">
