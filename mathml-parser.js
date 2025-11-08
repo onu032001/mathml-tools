@@ -17,9 +17,9 @@ function MathMLElementToJS(mmlElem, contin = false) {
         result += child.textContent;
         break;
       case 'mo':
-        if (child.form === 'infix' || child.form === 'postfix') {
+        if (child.getAttribute('form') === 'infix' || child.getAttribute('form') === 'postfix') {
           result += child.textContent;
-        } else if (child.separator === 'true') {
+        } else if (child.getAttribute('separator') === 'true') {
           result += child.textContent + ' ';
         } else {
           result += ` ${child.textContent} `;
