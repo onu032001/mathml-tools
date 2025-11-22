@@ -2,9 +2,9 @@
  * Parses MathML Element.
  * @param {MathMLElement} mmlElem MathML element parsed using MathML.
  */
-function MathMLElementToJS(mmlElem, contin = false) {
-  let result = '';
-  const structElem = ['math', 'mrow', 'msqrt'];
+function MathMLElementToJS(mmlElem, convertInsideNodes = false) {
+  let JSConversionResult = '';
+  const inferredRowElements = ['math', 'mrow', 'msqrt'];
   /**
    * Snippet to JavaScript.
    * @param {Node} child Child to iterate.
@@ -13,29 +13,32 @@ function MathMLElementToJS(mmlElem, contin = false) {
     if (child.nodeType === 3) return;
     const childName = child.nodeName.toLowerCase();
     switch (childName) {
-      case 'mn':
-        result += child.textContent;
+      case 'mn': {
+        JSConversionResult += child.textContent;
         break;
-      case 'mo':
+      }
+      case 'mo': {
         if (child.getAttribute('form') === 'prefix' || child.getAttribute('form') === 'postfix') {
-          result += child.textContent;
+          JSConversionResult += child.textContent;
         } else if (child.getAttribute('separator') === 'true') {
-          result += child.textContent + ' ';
+          JSConversionResult += child.textContent + ' ';
         } else {
-          result += ` ${child.textContent} `;
+          JSConversionResult += ` ${child.textContent} `;
         }
         break;
-      case 'mi':
+      }
+      case 'mi': {
         if (child.textContent === 'π') {
-          result += 'Math.PI';
+          JSConversionResult += 'Math.PI';
         } else if (child.textContent === 'e') {
-          result += 'Math.E';
+          JSConversionResult += 'Math.E';
         } else if (Math[child.textContent]) {
-          result += 'Math.' + child.textContent;
+          JSConversionResult += 'Math.' + child.textContent;
         } else {
-          result += child.textContent;
+          JSConversionResult += child.textContent;
         }
         break;
+      }
       case 'msup': {
         let childNodesInner = Array.from(child.childNodes);
         if (childNodesInner.at(-1).nodeType === 3) childNodesInner.pop();
@@ -44,7 +47,7 @@ function MathMLElementToJS(mmlElem, contin = false) {
         if (childNodesInner.at(-1).nodeType === 3) childNodesInner.pop();
         const elem1 = childNodesInner.pop();
         const val1 = MathMLElementToJS(elem1, true);
-        result += `(${val1} ** ${val2})`;
+        JSConversionResult += `(${val1} ** ${val2})`;
         break;
       }
       case 'mfrac': {
@@ -55,14 +58,16 @@ function MathMLElementToJS(mmlElem, contin = false) {
         if (childNodesInner.at(-1).nodeType === 3) childNodesInner.pop();
         const elem1 = childNodesInner.pop();
         const val1 = MathMLElementToJS(elem1, true);
-        result += `(${val1} / ${val2})`;
+        JSConversionResult += `(${val1} / ${val2})`;
         break;
       }
-      case 'mrow':
-        result += `(${MathMLElementToJS(child, false)})`;
+      case 'mfenced':
+      case 'mrow': {
+        JSConversionResult += `(${MathMLElementToJS(child, false)})`;
         break;
+      }
       case 'msqrt': {
-        result += `Math.sqrt(${MathMLElementToJS(child, false)})`;
+        JSConversionResult += `Math.sqrt(${MathMLElementToJS(child, false)})`;
         break;
       }
       case 'mroot': {
@@ -73,7 +78,7 @@ function MathMLElementToJS(mmlElem, contin = false) {
         if (childNodesInner.at(-1).nodeType === 3) childNodesInner.pop();
         const elem1 = childNodesInner.pop();
         const val1 = MathMLElementToJS(elem1, true);
-        result += `(${val1} ** (1 / ${val2}))`;
+        JSConversionResult += `(${val1} ** (1 / ${val2}))`;
         break;
       }
       default:
@@ -81,13 +86,13 @@ function MathMLElementToJS(mmlElem, contin = false) {
     }
   };
   const childNameOuter = mmlElem.nodeName.toLowerCase();
-  if (structElem.includes(childNameOuter) && !contin) {
+  if (inferredRowElements.includes(childNameOuter) && !convertInsideNodes) {
     const childNodes = Array.from(mmlElem.childNodes);
     childNodes.forEach(snippetToJS);
   } else {
     snippetToJS(mmlElem);
   }
-  return result;
+  return JSConversionResult;
 }
 function MathMLStringToJS(mml) {
   const parser = new DOMParser();
