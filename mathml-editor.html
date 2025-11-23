@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathML editor</title>
+    <link rel="stylesheet" href="https://onu032001.github.io/md-colors/colors.css">
+    <script src="../mathml-parser.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, var(--md-blue-6), var(--md-light-green-6));
+            display: flex;
+            align-content: center;
+            align-items: center;
+            justify-content: center;
+            justify-items: center;
+        }
+        .container {
+            width: 1000px;
+            min-height: 300px;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: var(--md-purple-5);
+            box-shadow: 0px 0px 20px var(--md-neutral-2);
+            & > .title { color: var(--md-neutral-1); }
+        }
+        .io-container {
+            border: 2px dashed var(--md-deep-purple-2);
+            background-color: var(--md-deep-purple-1);
+            border-radius: 5px;
+            padding: 6px;
+            margin-top: 6px;
+            margin-bottom: 6px;
+        }
+        .math-container {
+            border: 2px dashed var(--md-indigo-10);
+            background: linear-gradient(135deg, var(--md-indigo-6), var(--md-green-6));
+            color: var(--md-neutral-1);
+            border-radius: 5px;
+            padding: 6px;
+            margin-top: 3px;
+            margin-bottom: 3px;
+            width: calc(100% - 14px);
+        }
+        .input-area {
+            border: 2px solid var(--md-indigo-10);
+            background: linear-gradient(135deg, var(--md-indigo-6), var(--md-green-6));
+            color: var(--md-neutral-1);
+            border-radius: 5px;
+            padding: 6px;
+            margin-top: 3px;
+            margin-bottom: 3px;
+            width: calc(100% - 14px);
+            height: 200px;
+            resize: vertical;
+        }
+        .error {
+            color: var(--md-red-3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">MathML editor</h1>
+        <div class="io-container">
+            <label for="MathMLInput"><b>Enter MathML:</b></label>
+            <textarea id="MathMLInput" class="input-area"></textarea>
+        </div>
+        <div class="io-container">
+            <label for="result"><b>MathML Result:</b></label>
+            <div id="result" class="math-container"></div>
+        </div>
+        <div class="io-container">
+            <label for="jsResult"><b>MathML to JavaScript Expression:</b></label>
+            <div id="jsResult" class="math-container"></div>
+        </div>
+    </div>
+    <script>
+        const MathMLInput = document.getElementById('MathMLInput');
+        const result = document.getElementById('result');
+        const jsResult = document.getElementById('jsResult');
+        function renderMathML() {
+            if (MathMLInput.value.trim() === '') {
+                result.innerHTML = 'Please enter some code.';
+                jsResult.innerHTML = 'Please enter some code.';
+            } else {
+                const mmlCode = `<math display="block">${MathMLInput.value}</math>`;
+                result.innerHTML = mmlCode;
+                try {
+                    jsResult.classList.remove('error');
+                    jsResult.innerText = MathMLStringToJS(mmlCode);
+                } catch (error) {
+                    jsResult.classList.add('error');
+                    jsResult.innerText = error;
+                }
+            }
+        }
+        MathMLInput.addEventListener('input', renderMathML);
+        renderMathML();
+    </script>
+</body>
+</html>
