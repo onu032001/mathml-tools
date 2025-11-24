@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MathML 수식 편집기</title>
     <link rel="stylesheet" href="https://onu032001.github.io/md-colors/colors.css">
-    <script src="./mathml-parser.js"></script>
     <style>
         body {
             background: linear-gradient(135deg, var(--md-blue-6), var(--md-light-green-6));
@@ -73,15 +72,23 @@
         </div>
         <!-- 두 번째 입출력 요소: MathML 결과 출력 영역 -->
         <div class="io-container">
-            <p for="result"><b>MathML 출력 결과:
+            <span><b>MathML 출력 결과:
                 <!-- MathML 수식 계산 버튼 -->
                 <a class="compute-button" id="computeAnchor">이 MathML을 계산하세요.</a>
-            </b></p>
+            </b></span>
             <!-- MathML 렌더링 결과 요소 -->
             <div id="result" class="math-container"></div>
         </div>
     </div>
     <script>
+        /** 
+         * MathML 문자열을 계산하는 링크를 만듭니다.
+         * @param {string} MathMLString MathML 문자열입니다.
+         */
+        function getMathMLComp(MathMLString) {
+            return 'https://wolframalpha.com/input?i=' + encodeURIComponent(MathMLString);
+        }
+
         // 먼저 상수를 정의해야 JavaScript로 코딩을 할 수 있습니다.
         const MathMLInput = document.getElementById('MathMLInput'); // MathML 수식 편집 영역을 가져오는 상수입니다.
         const result = document.getElementById('result'); // MathML 렌더링 결과 요소를 가져오는 상수입니다.
@@ -99,7 +106,7 @@
             } else {
                 const mmlCode = `<math display="block">${MathMLInput.value}</math>`;
                 result.innerHTML = mmlCode;
-                computeAnchor.setAttribute('src', mmlCode);
+                computeAnchor.setAttribute('src', getMathMLComp(mmlCode));
             }
         }
 
