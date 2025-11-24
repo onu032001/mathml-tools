@@ -1,16 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
-    <title>Graph Plotter</title>
+    <title>MathML 수식 그래프 계산기</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js">
     </script>
     <script src="./mathml-parser.js"></script>
-    <!-- Credits to fred-wang -->
-    <link
-      rel="stylesheet"
-      href="https://fred-wang.github.io/MathFonts/LatinModern/mathfonts.css" />
 
     <style>
         body {
@@ -97,16 +93,16 @@
 <body>
     <div class="container">
         <header>
-            <h1>MathML Graph Plotter</h1>
+            <h1>MathML 수식 그래프 계산기</h1>
             <div class="input-container">
                 <textarea id="mmlInput" style="width: 100%;"></textarea>
-                <button onclick="convertMml()">Convert to MathML</button><br>
+                <button onclick="convertMml()">MathML로 변환</button><br>
                 <div contenteditable="true" id="functionInput" style="width: 100%;"></div><br>
                 <button onclick="rewrite()">
-                    Rewrite
+                    재작성
                 </button>
                 <button onclick="plotGraph()">
-                    Plot
+                    그래프 그리기
                 </button>
             </div>
         </header>
@@ -153,8 +149,8 @@
             };
 
             const layout = {
-                xaxis: { title: 'X-axis' },
-                yaxis: { title: 'Y-axis' },
+                xaxis: { title: 'X축' },
+                yaxis: { title: 'Y축' },
             };
 
             Plotly.newPlot(graph, [trace], layout);
