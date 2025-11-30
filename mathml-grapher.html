@@ -95,12 +95,12 @@
         <header>
             <h1>MathML 수식 그래프 계산기</h1>
             <div class="input-container">
-                <textarea id="mmlInput" style="width: 100%;"></textarea>
+                <textarea id="mmlInput" style="width: 100%;" placeholder="MathML 입력"></textarea>
+                <textarea id="config" style="width: 100%;"
+                    placeholder="{&quot;x_min&quot: ..., &quot;x_max&quot: ..., &quot;y_min&quot: ..., &quot;y_max&quot: ...}"
+                    >{"x_min": -10, "x_max": 10, "y_min": -10, "y_max": 10}</textarea>
                 <button onclick="convertMml()">MathML로 변환</button><br>
-                <div contenteditable="true" id="functionInput" style="width: 100%;"></div><br>
-                <button onclick="rewrite()">
-                    재작성
-                </button>
+                <div id="functionInput" style="width: 100%;"></div><br>
                 <button onclick="plotGraph()">
                     그래프 그리기
                 </button>
@@ -112,20 +112,11 @@
     </div>
 
     <script>
-        function copyMml() {
-            const mmlInput = document.getElementById('mmlInput');
-            copyHTML(mmlInput.value);
-        }
         function convertMml() {
             const mmlInput = document.getElementById('mmlInput');
             const functionInput =
                 document.getElementById('functionInput');
             functionInput.innerHTML = mmlInput.value;
-        }
-        function rewrite() {
-            const functionInput =
-                document.getElementById('functionInput');
-            functionInput.innerHTML = '';
         }
         function plotGraph() {
             const graph = document.getElementById('graph');
@@ -133,10 +124,13 @@
 
             const functionInput =
                 document.getElementById('functionInput').innerHTML;
+            const config =
+                JSON.parse(document.getElementById('config').value);
             const functionToJS = MathMLStringToJS(functionInput);
 
             const xValues = [];
-            for (let x = -10; x <= 10; x += 0.1) {
+            const {x_min, x_max, y_min, y_max} = config;
+            for (let x = x_min; x <= x_max; x += (x_max - x_min) / 10000) {
                 xValues.push(x);
             }
             const yValues = xValues.map(x => eval(functionToJS));
@@ -149,8 +143,8 @@
             };
 
             const layout = {
-                xaxis: { title: 'X축' },
-                yaxis: { title: 'Y축' },
+                xaxis: { title: 'X축', range: [x_min, x_max] },
+                yaxis: { title: 'Y축', range: [y_min, y_max] },
             };
 
             Plotly.newPlot(graph, [trace], layout);
