@@ -53,6 +53,19 @@
             width: calc(100% - 14px);
             height: 200px;
             resize: vertical;
+            font-family: monospace;
+            font-size: 13px;
+        }
+        .button {
+            border: 2px solid var(--md-indigo-10);
+            background: linear-gradient(135deg, var(--md-light-blue-6), var(--md-light-green-6));
+            color: var(--md-neutral-1);
+            border-radius: 5px;
+            padding: 6px;
+            margin-top: 3px;
+            margin-bottom: 3px;
+            width: calc(100% - 14px);
+            height: 200px;
         }
         .compute-button {
             text-decoration: none;
@@ -66,7 +79,7 @@
         <h1 class="title">MathML 수식 편집기</h1>
         <!-- 첫 번째 입출력 요소: MathML 수식 편집 영역 -->
         <div class="io-container">
-            <label for="MathMLInput"><b>MathML 입력:</b></label>
+            <label for="MathMLInput"><b>MathML 입력:</b><input id="unicode-input" class="input-area" style="resize: none;"><button class="button" id="unicode-insertion">유니코드 삽입</button></label>
             <!-- MathML 수식 편집 영역 -->
             <textarea id="MathMLInput" class="input-area"></textarea>
         </div>
@@ -93,8 +106,22 @@
         const MathMLInput = document.getElementById('MathMLInput'); // MathML 수식 편집 영역을 가져오는 상수입니다.
         const result = document.getElementById('result'); // MathML 렌더링 결과 요소를 가져오는 상수입니다.
         const computeAnchor = document.getElementById('computeAnchor'); // MathML 수식 계산 버튼을 가져오는 상수입니다.
-
+        const unicodeInput = document.getElementById('unicode-input');
+        const unicodeInsertion = document.getElementById('unicode-insertion');
+        
         // ...그리고 함수를 정의해야 JavaScript로 코딩을 할 수 있습니다.
+
+        function insertUnicode() {
+            const value = MathMLInput.value;
+            const start = MathMLInput.selectionStart;
+            const end = MathMLInput.selectionEnd;
+            const unicode = `&#${unicodeInput.value.charCodeAt(0)};`;
+            MathMLInput.value = value.substring(0, start) + unicode + value.substring(end);
+            MathMLInput.selectionStart = MathMLInput.selectionEnd = start + unicode.length;
+            unicodeInput.value = "";
+            MathMLInput.focus();
+        }
+        
         /** 
          * 사용자가 MathML 수식 편집 영역에 입력한 코드를 MathML 렌더링 결과 요소를 HTML로 삽입합니다.
          */
@@ -109,6 +136,8 @@
                 computeAnchor.setAttribute('href', getMathMLComp(mmlCode));
             }
         }
+
+        unicodeInsertion.addEventListener('click', insertUnicode);
 
         // MathML 수식 편집 영역에 무언가를 입력했을 때 MathML을 렌더링합니다.
         MathMLInput.addEventListener('input', renderMathML);
