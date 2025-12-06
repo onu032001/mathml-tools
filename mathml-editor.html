@@ -118,7 +118,8 @@
             const value = MathMLInput.value;
             const start = MathMLInput.selectionStart;
             const end = MathMLInput.selectionEnd;
-            const unicode = `&#${unicodeInput.value.charCodeAt(0)};`;
+            const unicodeChar = unicodeInput.value;
+            const unicode = `&#${unicodeChar.charCodeAt(0)};<!-- ${unicodeChar.charAt(0)} -->`;
             MathMLInput.value = value.substring(0, start) + unicode + value.substring(end);
             MathMLInput.selectionStart = MathMLInput.selectionEnd = start + unicode.length;
             unicodeInput.value = "";
