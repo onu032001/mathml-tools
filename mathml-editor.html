@@ -150,9 +150,11 @@
         // MathML 수식 편집 영역에 무언가를 입력했을 때 MathML을 렌더링합니다.
         MathMLInput.addEventListener('input', renderMathML);
         renderMathML();
-        unicodeInput.addEventListener('key', (event) => {
-            event.preventDefault();
-            insertUnicode();
+        unicodeInput.addEventListener('keydown', (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                insertUnicode();
+            }
         });
     </script>
 </body>
