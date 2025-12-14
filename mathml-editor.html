@@ -119,7 +119,10 @@
             const start = MathMLInput.selectionStart;
             const end = MathMLInput.selectionEnd;
             const unicodeChar = unicodeInput.value;
-            const unicode = `&#${unicodeChar.charCodeAt(0)};<!-- ${unicodeChar.charAt(0)} -->`;
+            const sourceCode = document.createElement("source-code");
+            sourceCode.innerHTML = unicodeChar;
+            const it = sourceCode.innerText;
+            const unicode = `&#${it.charCodeAt(0)};<!-- ${it.charAt(0)} -->`;
             MathMLInput.value = value.substring(0, start) + unicode + value.substring(end);
             MathMLInput.selectionStart = MathMLInput.selectionEnd = start + unicode.length;
             unicodeInput.value = "";
