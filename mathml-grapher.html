@@ -124,6 +124,7 @@
             const functionInput =
                 document.getElementById('functionInput');
             functionInput.innerHTML = mmlInput.value;
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
         }
         function plotGraph() {
             const graph = document.getElementById('graph');
