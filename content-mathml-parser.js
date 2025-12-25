@@ -16,7 +16,7 @@ function contentMathMLElementToJS(mmlElem) {
   }
   const nodeName = mmlElem.nodeName;
   if (nodeName == 'ci' || nodeName == 'cn' || nodeName == 'exponentiale' || nodeName == 'pi') {
-    let nodeResult = mmlElem.innerText;
+    let nodeResult = mmlElem.innerHTML;
     if (mmlElem.nodeName == 'ci') {
       if (nodeName == 'pi') nodeResult = 'Math.PI'
       else if (nodeName == 'exponentiale') nodeResult = 'Math.E';
@@ -69,3 +69,4 @@ function contentMathMLStringToJS(mml) {
   return contentMathMLElementToJS(mmlElem);
 
 }
+
