@@ -130,8 +130,7 @@
             const graph = document.getElementById('graph');
             graph.innerHTML = '';
 
-            const functionInput =
-                document.getElementById('functionInput').innerHTML;
+            const functionInput = document.getElementById('mmlInput').value;
             const config =
                 JSON.parse(document.getElementById('config').value);
             const functionToJS = contentMathMLStringToJS(functionInput);
