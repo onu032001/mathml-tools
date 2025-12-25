@@ -10,7 +10,7 @@ function contentMathMLElementToJS(mmlElem) {
   }
   const operatorMaps = {
     sin: "sin", cos: "cos", tan: "tan",
-    arcsin: "arcsin", arccos: "arccos", arctan: "arctan",
+    arcsin: "asin", arccos: "acos", arctan: "atan",
     ln: "log", log: "log10", floor: "floor", ceiling: "ceil", abs: "abs",
     min: "min", max: "max"
   }
@@ -69,4 +69,5 @@ function contentMathMLStringToJS(mml) {
   return contentMathMLElementToJS(mmlElem);
 
 }
+
 
