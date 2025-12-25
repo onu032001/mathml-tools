@@ -4,10 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <title>MathML 수식 그래프 계산기</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="./content-mathml-parser.js"></script>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        MathML: {
+            extensions: ["content-mathml.js"]
+        }
+    });
     </script>
-    <script src="./mathml-parser.js"></script>
-
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=MML_CHTML&locale=ko"></script>
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -126,7 +133,7 @@
                 document.getElementById('functionInput').innerHTML;
             const config =
                 JSON.parse(document.getElementById('config').value);
-            const functionToJS = MathMLStringToJS(functionInput);
+            const functionToJS = contentMathMLStringToJS(functionInput);
 
             const xValues = [];
             const {x_min, x_max, y_min, y_max} = config;
