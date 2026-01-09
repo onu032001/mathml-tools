@@ -3,159 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MathML 수식 편집기</title>
-    <link rel="stylesheet" href="https://onu032001.github.io/md-colors/colors.css">
+    <title>MathML 수식 건설</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <style>
         body {
-            background: linear-gradient(135deg, var(--md-blue-6), var(--md-light-green-6));
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
             display: flex;
-            align-content: center;
-            align-items: center;
-            justify-content: center;
-            justify-items: center;
-        }
-        .container {
-            width: 1000px;
-            min-height: 300px;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 10px;
-            background-color: var(--md-purple-5);
-            box-shadow: 0px 0px 20px var(--md-neutral-2);
-            & > .title { color: var(--md-neutral-1); }
-        }
-        .io-container {
-            border: 2px dashed var(--md-deep-purple-2);
-            background-color: var(--md-deep-purple-1);
-            border-radius: 5px;
-            padding: 6px;
-            margin-top: 6px;
-            margin-bottom: 6px;
-        }
-        .math-container {
-            border: 2px dashed var(--md-indigo-10);
-            background: linear-gradient(135deg, var(--md-indigo-6), var(--md-green-6));
-            color: var(--md-neutral-1);
-            border-radius: 5px;
-            padding: 6px;
-            margin-top: 3px;
-            margin-bottom: 3px;
-            width: calc(100% - 14px);
-        }
-        .input-area {
-            border: 2px solid var(--md-indigo-10);
-            background: linear-gradient(135deg, var(--md-indigo-6), var(--md-green-6));
-            color: var(--md-neutral-1);
-            border-radius: 5px;
-            padding: 6px;
-            margin-top: 3px;
-            margin-bottom: 3px;
-            width: calc(100% - 14px);
-            height: 200px;
-            resize: vertical;
-            font-family: monospace;
-            font-size: 13px;
-        }
-        #unicode-input {
-            border: 2px solid var(--md-indigo-10);
-            background: linear-gradient(135deg, var(--md-indigo-6), var(--md-green-6));
-            color: var(--md-neutral-1);
-            border-radius: 5px;
-            font-family: monospace;
-        }
-        .button {
-            border: 2px solid var(--md-light-blue-10);
-            background: linear-gradient(135deg, var(--md-light-blue-6), var(--md-light-green-6));
-            color: var(--md-neutral-1);
-            border-radius: 5px;
-            font-family: sans-serif;
-        }
-        .compute-button {
-            text-decoration: none;
-            color: var(--md-blue-3);
+            flex-direction: column;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <!-- 제목 요소 -->
-        <h1 class="title">MathML 수식 편집기</h1>
-        <!-- 첫 번째 입출력 요소: MathML 수식 편집 영역 -->
-        <div class="io-container">
-            <label for="MathMLInput"><b>MathML 입력: (&lt;math xmlns="http://www.w3.org/1998/Math/MathML" display="block"&gt; 내부)</b><br><input id="unicode-input" style="resize: none;"><button class="button" id="unicode-insertion">유니코드 삽입</button></label>
-            <!-- MathML 수식 편집 영역 -->
-            <textarea id="MathMLInput" class="input-area"></textarea>
+<body class="antialiased">
+
+    <!-- Header / Navbar Placeholder -->
+    <header class="bg-white border-b border-slate-200 p-4">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold text-slate-800">MathML 수식 건설</h1>
+            <nav class="space-x-4 text-sm font-medium text-slate-600">
+                <a href="#" class="hover:text-blue-600 transition">홈</a>
+                <a target="_blank" href="https://www.w3.org/TR/MathML/chapter3.html" class="hover:text-blue-600 transition">요소</a>
+                <a target="_blank" href="http://www.w3.org/1998/Math/MathML" class="hover:text-blue-600 transition">네임스페이스</a>
+            </nav>
         </div>
-        <!-- 두 번째 입출력 요소: MathML 결과 출력 영역 -->
-        <div class="io-container">
-            <span><b>MathML 출력 결과:
-                <!-- MathML 수식 계산 버튼 -->
-                <a class="compute-button" id="computeAnchor" target="_blank">이 MathML을 계산하세요.</a>
-            </b></span>
-            <!-- MathML 렌더링 결과 요소 -->
-            <div id="result" class="math-container"></div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow flex items-center justify-center p-6">
+        <div class="text-center bg-white p-12 rounded-2xl shadow-sm border border-slate-200 w-[80%]">
+            <div class="border-2 rounded-[5px] py-[10px] bg-neutral-400 text-neutral-500 border-neutral-500 text-[13px]">
+            	<label for="mathmlInput" class="uppercase font-semibold">MathML 입력</label><br>
+                <textarea id="mathmlInput" class="font-mono text-[13px] bg-zinc-800 border-2 border-black rounded-[5px] w-[90%] h-[200px] text-teal-400 resize-none"><math><semantics><msqrt><mn>2</mn></msqrt><annotation encoding="application/x-tex">mathjax annotation text</annotation></semantics></math></textarea>
+            </div><br>
+            <button id="renderButton" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                렌더
+            </button><br>
+            <div class="border-2 rounded-[5px] py-[10px] bg-neutral-400 text-neutral-500 border-neutral-500 text-[13px]">
+            	<label for="mathmlInput" class="uppercase font-semibold">MathML 결과</label><br>
+                <div id="mathmlOutput" class="inline-block text-[1.5rem] bg-zinc-800 border-2 border-black rounded-[5px] w-[90%] h-[200px] text-white text-left">MathML 입력...</div>
+            </div>
         </div>
-    </div>
+    </main>
+
+    <!-- Footer Placeholder -->
+    <footer class="p-6 text-center text-slate-400 text-xs">
+        &copy; 2026 MathML 수식 건설. HTML5와 Tailwind 이용.
+    </footer>
+
     <script>
-        /** 
-         * MathML 문자열을 계산하는 링크를 만듭니다.
-         * @param {string} MathMLString MathML 문자열입니다.
-         */
-        function getMathMLComp(MathMLString) {
-            return 'https://wolframalpha.com/input?i=' + encodeURIComponent(MathMLString);
-        }
-
-        // 먼저 상수를 정의해야 JavaScript로 코딩을 할 수 있습니다.
-        const MathMLInput = document.getElementById('MathMLInput'); // MathML 수식 편집 영역을 가져오는 상수입니다.
-        const result = document.getElementById('result'); // MathML 렌더링 결과 요소를 가져오는 상수입니다.
-        const computeAnchor = document.getElementById('computeAnchor'); // MathML 수식 계산 버튼을 가져오는 상수입니다.
-        const unicodeInput = document.getElementById('unicode-input');
-        const unicodeInsertion = document.getElementById('unicode-insertion');
+        const mathmlInput = document.getElementById('mathmlInput');
+        const mathmlOutput = document.getElementById('mathmlOutput');
+        const renderButton = document.getElementById('renderButton');
         
-        // ...그리고 함수를 정의해야 JavaScript로 코딩을 할 수 있습니다.
-
-        function insertUnicode() {
-            const value = MathMLInput.value;
-            const start = MathMLInput.selectionStart;
-            const end = MathMLInput.selectionEnd;
-            const unicodeChar = unicodeInput.value;
-            const sourceCode = document.createElement("source-code");
-            sourceCode.innerHTML = unicodeChar;
-            const it = sourceCode.innerText;
-            const unicode = `&#${it.charCodeAt(0)};<!-- ${it.charAt(0)} -->`;
-            MathMLInput.value = value.substring(0, start) + unicode + value.substring(end);
-            MathMLInput.selectionStart = MathMLInput.selectionEnd = start + unicode.length;
-            unicodeInput.value = "";
-            MathMLInput.focus();
-            renderMathML();
+        function waitUntil(condition) {
+            return new Promise(resolve => window.setInterval(async () => {
+                if (await condition()) {
+                    resolve();
+                }
+            }, 0));
         }
         
-        /** 
-         * 사용자가 MathML 수식 편집 영역에 입력한 코드를 MathML 렌더링 결과 요소를 HTML로 삽입합니다.
-         */
-        function renderMathML() {
-            // MathML 수식 계산 버튼을 초기화합니다.
-            computeAnchor.setAttribute('href', '');
-            if (MathMLInput.value.trim() === '') {
-                result.innerHTML = 'MathML 요소 코드를 입력하세요.';
+        let currentTimeout;
+        
+        function stringToDom(stringInput) {
+            const div = document.createElement('div');
+            div.innerText = stringInput;
+            return div.innerHTML;
+        }
+        
+        function renderMathML(mathmlString) {
+            if (mathmlString.trim() == '') {
+                mathmlOutput.innerHTML = 'MathML 입력...';
             } else {
-                const mmlCode = `<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">${MathMLInput.value}</math>`;
-                result.innerHTML = mmlCode;
-                computeAnchor.setAttribute('href', getMathMLComp(mmlCode));
+                mathmlOutput.innerHTML = mathmlString;
+                MathJax.typesetPromise([mathmlOutput])
+                    .catch((error) => {
+                        mathmlOutput.innerHTML = `<span class="text-red-500">${stringToDom(error)}</span>`;
+                    })
             }
         }
-
-        unicodeInsertion.addEventListener('click', insertUnicode);
-
-        // MathML 수식 편집 영역에 무언가를 입력했을 때 MathML을 렌더링합니다.
-        MathMLInput.addEventListener('input', renderMathML);
-        renderMathML();
-        unicodeInput.addEventListener('keydown', (event) => {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                insertUnicode();
+        
+        const manualRender = () => {
+            const mathml = mathmlInput.value.trim();
+            renderMathML(mathml);
+        };
+        
+        function inputHandler() {
+            if (currentTimeout) {
+                window.clearTimeout(currentTimeout);
             }
-        });
+            currentTimeout = window.setTimeout(manualRender, 750);
+        }
+        
+        mathmlInput.addEventListener('input', inputHandler);
+        renderButton.addEventListener('click', manualRender);
+        
+        waitUntil(async () => {
+            try {
+                let temp = MathJax;
+                return true;
+            } catch (error) {
+                return false;
+            }
+        }).then(() => manualRender());
     </script>
 </body>
 </html>
