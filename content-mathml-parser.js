@@ -3,6 +3,7 @@
  * @param {MathMLElement} mmlElem 처리할 MathML 요소
  */
 function contentMathMLElementToJS(mmlElem) {
+  if (child.nodeType === 3) return;
   const binMaps = {
     plus: "+", times: "*", divide: "/", power: "**",
     eq: "==", neq: "!=", gt: ">", lt: "<", geq: ">=", neq: "<=",
@@ -69,5 +70,6 @@ function contentMathMLStringToJS(mml) {
   return contentMathMLElementToJS(mmlElem);
 
 }
+
 
 
