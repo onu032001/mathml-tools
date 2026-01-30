@@ -18,10 +18,9 @@ function contentMathMLElementToJS(mmlElem) {
   const nodeName = mmlElem.nodeName;
   if (nodeName == 'ci' || nodeName == 'cn' || nodeName == 'exponentiale' || nodeName == 'pi') {
     let nodeResult = mmlElem.innerHTML;
-    if (mmlElem.nodeName == 'ci') {
-      if (nodeName == 'pi') nodeResult = 'Math.PI'
-      else if (nodeName == 'exponentiale') nodeResult = 'Math.E';
-    } else if (mmlElem.nodeName == 'cn' && nodeResult.startsWith('-'))
+    if (nodeName == 'pi') nodeResult = 'Math.PI'
+    else if (nodeName == 'exponentiale') nodeResult = 'Math.E'
+    else if (mmlElem.nodeName == 'cn' && nodeResult.startsWith('-'))
       nodeResult = `(-${nodeResult})`;
     return nodeResult;
   } else if (mmlElem.nodeName == 'math') {
@@ -70,6 +69,7 @@ function contentMathMLStringToJS(mml) {
   return contentMathMLElementToJS(mmlElem);
 
 }
+
 
 
 
