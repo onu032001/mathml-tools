@@ -311,7 +311,6 @@
 
         function plotMathML(mathmlString) {
             const cmml = cmmlParser.parseFromString(mathmlString);
-            console.log(cmml);
             plot(x => cmmlParser.calculate(cmml, { x }));
         }
 
