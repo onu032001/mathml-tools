@@ -1,11 +1,20 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MathML 그래프 계산기</title>
-    <script src="https://onu032001.github.io/xml-and-mml-tools/lib/xml-parser.js"></script>
-    <script src="https://onu032001.github.io/xml-and-mml-tools/lib/mathml-calculator.js"></script>
+    <title>Contents MathML Graphing Calculator</title>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            MathML: {
+                extensions: ["content-mathml.js"]
+            }
+        });
+    </script>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <script src="https://onu032001.github.io/content-mathml-parser/lib/content-mathml-parser.js"></script>
     <style>
         body {
             width: fit-content;
@@ -117,29 +126,41 @@
             justify-content: center;
             font-size: 1.5rem;
         }
+        .inline-button {
+            color: #2196F3;
+            background-color: transparent;
+            border: none;
+            font-size: inherit;
+            font-weight: inherit;
+            padding: 0;
+            cursor: pointer;
+        }
+        .inline-button:hover {
+            color: #1976D2;
+        }
     </style>
 </head>
 <body>
     <header class="container">
-        <h1 class="title">MathML 그래프 계산기</h1>
-        <p class="description">MathML을 이용하여 그래프를 그려보세요.</p>
+        <h1 class="title">Contents MathML Graphing Calculator</h1>
+        <p class="description">The graphing calculator.</p>
     </header>
     <section class="container">
         <div class="full-width">
-            <h2 class="content-title">MathML 입력란</h2>
-            <textarea class="input-area container-area shadow" id="mathmlEditorArea" placeholder="여기에 MathML 수식을 입력하세요..."></textarea>
-            <h2 class="content-title">수식 렌더링</h2>
+            <h2 class="content-title">Enter Contents MathML</h2>
+            <textarea class="input-area container-area shadow" id="mathmlEditorArea" placeholder="Enter Contents MathML expression here..."></textarea>
+            <h2 class="content-title">Equation Rendering Result (<button class="inline-button" id="renderEquationButton">Render Equation</button>)</h2>
             <div class="full-width-element equation-render container-area shadow">
                 <div class="equation-text" id="equationRenderResult"></div>
             </div>
-            <h2 class="content-title">최솟값과 최댓값 (x최소, x최대, y최소, y최대):</h2>
-            <textarea class="input-area container-area shadow" id="axesEditorArea" placeholder="쉼표로 구분하여 입력해 주세요... (띄어쓰기 불가능)">-5,5,-5,5</textarea>
-            <h2 class="content-title">도구</h2>
-            <button class="button shadow" id="plotMathMLButton">그래프 그리기</button>
+            <h2 class="content-title">Minimum and Maximum (XMin, XMax, YMin, YMax)</h2>
+            <textarea class="input-area container-area shadow" id="axesEditorArea" placeholder="Enter bounds separated by comma (Spaces are not allowed)...">-5,5,-5,5</textarea>
+            <h2 class="content-title">Tools</h2>
+            <button class="button shadow" id="plotMathMLButton">Draw Graph</button>
         </div>
         <div class="full-width">
             <hr>
-            <h2 class="content-title">좌표평면</h2>
+            <h2 class="content-title">Coordinate Plane</h2>
             <canvas class="container-area" id="graphingArea" width="960" height="540"></canvas>
         </div>
     </section>
@@ -159,19 +180,20 @@
 
         const axesEditorArea = document.getElementById("axesEditorArea");
         
+        const renderEquationButton = document.getElementById("renderEquationButton");
         const plotMathMLButton = document.getElementById("plotMathMLButton");
 
 
         /**
-         * @typedef {object} GraphConfigurations 그래프 속성 객체입니다.
-         * @property {number} xMin *x*<span></span>좌표의 최솟값입니다.
-         * @property {number} xMax *x*<span></span>좌표의 최댓값입니다.
-         * @property {number} yMin *y*<span></span>좌표의 최솟값입니다.
-         * @property {number} yMax *y*<span></span>좌표의 최댓값입니다.
+         * @typedef {object} GraphConfigurations The graph configurations object.
+         * @property {number} xMin Minimum value of X-Bounds.
+         * @property {number} xMax Maximum value of X-Bounds.
+         * @property {number} yMin Minimum value of Y-Bounds.
+         * @property {number} yMax Maximum value of Y-Bounds.
          */
 
         /**
-         * @type {GraphConfigurations} 그래프 속성을 나타내는 객체의 기본값입니다.
+         * @type {GraphConfigurations} The initial graph configurations.
          */
         const graphConfig = {
             xMin: -5,
@@ -181,12 +203,12 @@
         };
 
         /**
-         * 주어진 수를 구간 안으로 대응합니다.
-         * @param {number} value 대응할 값입니다.
-         * @param {number} min 대응할 값의 최솟값입니다.
-         * @param {number} max 대응할 값의 최댓값입니다.
-         * @param {number} targetMin 대응한 값의 최솟값입니다.
-         * @param {number} targetMax 대응한 값의 최댓값입니다.
+         * Maps the number from range to range.
+         * @param {number} value Number to be mapped.
+         * @param {number} min Minimum value of the start range.
+         * @param {number} max Maximum value of the start range.
+         * @param {number} targetMin Minimum value of the end range.
+         * @param {number} targetMax Maximum value of the end range.
          */
         const mapRange = (value, min, max, targetMin, targetMax) => targetMin + (value - min) / (max - min) * (targetMax - targetMin);
 
@@ -194,7 +216,7 @@
         const optFunc = (val, fact) => val / fact;
         
         /**
-         * 축과 격자를 그립니다.
+         * Draws the axes and grid.
          */
         function drawAxes() {
             const optimized = (function() {
@@ -263,7 +285,7 @@
         }
 
         /**
-         * 함수의 그래프를 그립니다.
+         * Plots the function.
          */
         function plot(func) {
             ctx.clearRect(0, 0, 960, 540);
@@ -288,21 +310,22 @@
         }
 
         function plotMathML(mathmlString) {
-            plot(x => {
-                const parsedXML = pb_xmlp.parseXMLFromString(mathmlString);
-                const parsedMathML = pb_mmlp.parseExpression({ expression: parsedXML.contents }).result;
-                return pb_mmlc.calculateMathMLObject(parsedMathML, { x });
-            });
+            const cmml = cmmlParser.parseFromString(mathmlString);
+            console.log(cmml);
+            plot(x => cmmlParser.calculate(cmml, { x }));
         }
 
-        mathmlEditorArea.oninput = () => {
+        renderEquationButton.onclick = () => {
             equationRenderResult.innerHTML = mathmlEditorArea.value;
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, equationRenderResult]);
         }
 
         plotMathMLButton.onclick = () => {
+            equationRenderResult.innerHTML = mathmlEditorArea.value;
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, equationRenderResult]);
             [xMin, xMax, yMin, yMax] = axesEditorArea.value.split(',').map(Number);
             Object.assign(graphConfig, { xMin, xMax, yMin, yMax });
-            plotMathML(equationRenderResult.innerHTML);
+            plotMathML(mathmlEditorArea.value);
         }
 
         drawAxes();
