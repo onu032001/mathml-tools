@@ -29,7 +29,7 @@
             justify-content: center;
         }
         body, textarea, button {
-            font-family: "Pretendard", sans-serif;
+            font-family: "Pretendard", "Arial", "Helvetica", "NanumGothic", "Noto Sans KR" sans-serif;
         }
         canvas {
             border: 1px solid black;
@@ -165,13 +165,7 @@
         </div>
     </section>
     <script>
-        /**
-         * @type {HTMLCanvasElement}
-         */
         const canvas = document.getElementById("graphingArea");
-        /**
-         * @type {CanvasRenderingContext2D}
-         */
         const ctx = canvas.getContext("2d");
         ctx.lineWidth = 2;
 
@@ -183,18 +177,6 @@
         const renderEquationButton = document.getElementById("renderEquationButton");
         const plotMathMLButton = document.getElementById("plotMathMLButton");
 
-
-        /**
-         * @typedef {object} GraphConfigurations The graph configurations object.
-         * @property {number} xMin Minimum value of X-Bounds.
-         * @property {number} xMax Maximum value of X-Bounds.
-         * @property {number} yMin Minimum value of Y-Bounds.
-         * @property {number} yMax Maximum value of Y-Bounds.
-         */
-
-        /**
-         * @type {GraphConfigurations} The initial graph configurations.
-         */
         const graphConfig = {
             xMin: -5,
             xMax: 5,
@@ -202,22 +184,11 @@
             yMax: 5
         };
 
-        /**
-         * Maps the number from range to range.
-         * @param {number} value Number to be mapped.
-         * @param {number} min Minimum value of the start range.
-         * @param {number} max Maximum value of the start range.
-         * @param {number} targetMin Minimum value of the end range.
-         * @param {number} targetMax Maximum value of the end range.
-         */
         const mapRange = (value, min, max, targetMin, targetMax) => targetMin + (value - min) / (max - min) * (targetMax - targetMin);
 
         const getFact = val => Math.pow(10, Math.floor(Math.log10(Math.abs(val))));
         const optFunc = (val, fact) => val / fact;
-        
-        /**
-         * Draws the axes and grid.
-         */
+
         function drawAxes() {
             const optimized = (function() {
                 const xFact = getFact(graphConfig.xMax - graphConfig.xMin);
@@ -284,9 +255,6 @@
             }
         }
 
-        /**
-         * Plots the function.
-         */
         function plot(func) {
             ctx.clearRect(0, 0, 960, 540);
             drawAxes();
